@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Root from './Root';
 
 import {
@@ -8,8 +8,46 @@ import {
   Link
 } from "react-router-dom";
 import './App.css';
+// import { JitsiMeetExternalAPI } from './jitsi-min';
 
 function App() {
+  let [jitsiState, setJitsiState] = useState(false);
+  let [jitsiParentNode, setJitsiParentNode] = useState(document.getElementById('meet'));
+
+  const domain = 'meet.jit.si';
+  const options = {
+    roomName: 'JitsiMeetWithSaiTeja',
+    height: '35em',
+    parentNode: ''
+  };
+
+  useEffect(() => {
+    // Update the document title using the browser API
+      if(!jitsiState) {
+        const script = document.createElement("script");
+        script.src = "https://meet.jit.si/external_api.js";
+        script.async = false;
+        script.onload = () => {
+
+          console.log("************************\n" + document.getElementById('meet'));
+          const JitsiMeetExternalAPI = window.JitsiMeetExternalAPI;
+          // setJitsiState(true);
+          options.parentNode = document.getElementById('meet');
+          // setJitsiParentNode(document.getElementById('meet'));
+          console.log(window.JitsiMeetExternalAPI);
+          new JitsiMeetExternalAPI(domain, options);
+
+        };
+
+        document.body.appendChild(script);
+      }
+      else {
+        const JitsiMeetExternalAPI = window.JitsiMeetExternalAPI;
+        new JitsiMeetExternalAPI(domain, options);
+      }
+    
+  });
+
   return (
     <Router>
       <div>
@@ -34,11 +72,11 @@ function App() {
           <Root />
           </Route>
           <Route path="/meet">
-            Whatev
+          <div id="meet2">
+            </div> 
           </Route>
           <Route path="/">
             <div id="meet">
-              I am here
             </div>  
           </Route>
         </Switch>
