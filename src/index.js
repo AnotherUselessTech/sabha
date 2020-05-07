@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-// import Jitsi from './jitsi-min';
-// const Jitsi = require('./jitsi-min');
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,23 +11,13 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// const domain = 'meet.jit.si';
-// const options = {
-//   roomName: 'JitsiMeetWithSaiTeja',
-//   width: 700,
-//   height: 700,
-//   parentNode: document.getElementById('meet')
-// };
-// console.log("************************\n" + options.parentNode)
-
-// new JitsiMeetExternalAPI(domain, options);
-// setTimeout(() => {
-//   const JitsiMeetExternalAPI = window.JitsiMeetExternalAPI;
-//   console.log(window.JitsiMeetExternalAPI);
-//   new JitsiMeetExternalAPI(domain, options);
-// },3000)
-
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.register();
+if(process.env.NODE_ENV === 'production') {
+  serviceWorker.register();
+}
+else {
+  serviceWorker.unregister();
+}
+
