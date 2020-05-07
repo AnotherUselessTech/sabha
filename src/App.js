@@ -1,5 +1,6 @@
 import React from 'react';
 import Root from './Root';
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -21,7 +22,7 @@ function App() {
               <Link to="/about">About</Link>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <Link to="/meet">Users</Link>
             </li>
           </ul>
         </nav>
@@ -30,13 +31,15 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/about">
-            About
+          <Root />
           </Route>
-          <Route path="/users">
-            Users>
+          <Route path="/meet">
+            Whatev
           </Route>
           <Route path="/">
-            <Root />
+            <div id="meet">
+              I am here
+            </div>  
           </Route>
         </Switch>
       </div>

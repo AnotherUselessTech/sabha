@@ -1,7 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
+import Jitsi from './jitsi-min';
 
 export default function () {
+    const domain = 'meet.jit.si';
+    const options = {
+        roomName: 'JitsiMeetAPIExample',
+        width: 700,
+        height: 700,
+        parentNode: document.getElementById('meet')
+    };
+    console.log("************************\n"+options.parentNode)
+    console.log(document.getElementById("meet"));
+    // new Jitsi(domain, options);
     return (
         <div className="App">
             <header className="App-header">
