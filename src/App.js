@@ -9,7 +9,6 @@ import {
   Link
 } from "react-router-dom";
 import './App.css';
-// import { JitsiMeetExternalAPI } from './jitsi-min';
 
 function App() {
 
@@ -17,17 +16,12 @@ function App() {
     <Router>
       <div>
         <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/meet">Meet</Link>
-            </li>
-          </ul>
+          <div class='navbar'>
+            <h3>SABHA</h3>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+            <Link to="/meet">Meet</Link>
+          </div>
         </nav>
 
         {/* A <Switch> looks through its children <Route>s and

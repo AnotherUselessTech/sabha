@@ -42,7 +42,6 @@ export default function Meet(props) {
 
     return (
         <div>
-            Hi
         </div>
     )
 }
