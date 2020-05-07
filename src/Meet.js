@@ -3,7 +3,6 @@ import React, {useState, useEffect} from 'react';
 export default function Meet(props) {
     
     let [jitsiState, setJitsiState] = useState(false);
-    let [jitsiParentNode, setJitsiParentNode] = useState(document.getElementById(props.divId));
   
     const domain = 'meet.jit.si';
     const options = {
@@ -38,7 +37,7 @@ export default function Meet(props) {
         //     new JitsiMeetExternalAPI(domain, options);
         //   }
         
-      });
+      }, [jitsiState, props.divId, options]);
 
     return (
         <div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Root from './Root';
 import Meet from './Meet';
 
@@ -16,7 +16,7 @@ function App() {
     <Router>
       <div>
         <nav>
-          <div class='navbar'>
+          <div className='navbar'>
             <h3>SABHA</h3>
             <Link to="/">Home</Link>
             <Link to="/about">About</Link>
