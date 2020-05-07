@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import Jitsi from './jitsi-min';
+// import Jitsi from './jitsi-min';
+const Jitsi = require('./jitsi-min');
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,13 +15,13 @@ ReactDOM.render(
 
 const domain = 'meet.jit.si';
 const options = {
-  roomName: 'JitsiMeetAPIExample',
+  roomName: 'JitsiMeetWithSaiTeja',
   width: 700,
   height: 700,
   parentNode: document.getElementById('meet')
 };
 console.log("************************\n" + options.parentNode)
-new Jitsi(domain, options)
+new Jitsi(domain, options);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
