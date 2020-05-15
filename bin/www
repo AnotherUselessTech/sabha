@@ -20,12 +20,23 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+var io = require('socket.io')(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-server.listen(port);
+io.on('connection', (socket) => {
+  socket.on('inputting', (msg) => {
+    console.log("Message: "+msg);
+  });
+  socket.on('streaming', (msg) => {
+    let id = '';
+    console.log("Message: "+msg.audio);
+    io.emit('listening', {id: msg.id, audio: msg.audio, video: msg.video});
+  });
+});
+server.listen(port, () => {
+  console.log("yeah, i am listening!");
+});
 server.on('error', onError);
 server.on('listening', onListening);
 

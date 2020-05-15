@@ -1,6 +1,7 @@
 import React from 'react';
 import Root from './Root';
 import Meet from './Meet';
+import NativeMeet from './NativeMeet';
 
 import {
   BrowserRouter as Router,
@@ -33,7 +34,7 @@ function App() {
           <Route path="/meet">
           <div id="meet2">
             </div> 
-            <Meet divId = 'meet2'/> 
+            <NativeMeet />
           </Route>
           <Route path="/">
             <div id="meet">
