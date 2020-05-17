@@ -7,9 +7,9 @@ on:
   push:
     branches:
       - master
-      
+
 env: 
-  mongopwd: ${{ mongopwd }}
+  mongopwd: ${{ secrets.mongopwd }}
 
 jobs:
   build-and-deploy:
