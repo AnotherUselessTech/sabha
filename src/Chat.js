@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 // import Chat2 from './Chat2';
 import './ChatStyles.css';
-import { serverUrl } from './urls';
+// import { serverUrl } from './urls';
 
 const inputStyle = {
     width: '30%',
@@ -108,7 +108,7 @@ const Chat = () => {
 
     useEffect(() => {
         if(chatStarted) {
-            const socket = io(serverUrl());
+            const socket = io();
             socket.emit('initialize', {roomName});
             socket.on('otherschatreplies', (chats) => {
             let myChatSet = {};
@@ -116,6 +116,8 @@ const Chat = () => {
             // setUsersData(chats, othersChatSet, myChatSet);
             // setOtherChat(othersChatSet);
             // setMyChat(myChatSet);
+            console.log("Trying not to look");
+            console.log(chats.dontlook);
             setAllChat(chats);
 
         });
@@ -154,7 +156,7 @@ const Chat = () => {
                 <div style={buttonDiv}>
                     <button style={buttonStyle} onClick={() => {
                         setrChatStarted(true);
-                        const socket = io(serverUrl());
+                        const socket = io();
                         socket.emit('joined', { roomName: roomName, username: userName });
                     }}>Join Chat Room</button>
                 </div>
@@ -237,7 +239,7 @@ const Chat = () => {
 
                     <form className="msger-inputarea" onSubmit={(e) => {
                         e.preventDefault();
-                        const socket = io(serverUrl());
+                        const socket = io();
                         socket.emit('captureChat', {
                             username: userName,
                             roomName: roomName,

