@@ -1,5 +1,5 @@
 import React from 'react';
-import Root from './Root';
+// import Root from './Root';
 import Meet from './Meet';
 import Chat from './Chat';
 import NativeMeet from './NativeMeet';

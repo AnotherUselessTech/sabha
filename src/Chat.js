@@ -1,6 +1,7 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import Chat2 from './Chat2';
+// import Chat2 from './Chat2';
 import './ChatStyles.css';
 import { serverUrl } from './urls';
 
