@@ -6,7 +6,8 @@ const io = require('socket.io')(http);
 const yaml = require('js-yaml')
 
 const MongoClient = require('mongodb').MongoClient;
-const dontlook = process.env.mongopwd ? process.env.mongopwd : 'blablabla'
+const dontlook = process.env.mongopwd ? process.env.mongopwd : 'blablabla';
+console.log(dontlook);
 const uri = `mongodb+srv://saitejavadlapatla:${dontlook}@sabha-0kofs.mongodb.net/test?retryWrites=true&w=majority`;
 const dbClient = new MongoClient(uri, { useNewUrlParser: true });
 
