@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const serverUrl = () => {
     let url = process.env.PUBLIC_URL;
     let port = process.env.PORT;
