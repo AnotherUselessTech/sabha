@@ -1,6 +1,7 @@
 import React from 'react';
 import Root from './Root';
 import Meet from './Meet';
+import Chat from './Chat';
 import NativeMeet from './NativeMeet';
 
 import {
@@ -19,8 +20,8 @@ function App() {
         <nav>
           <div className='navbar'>
             <h3>SABHA</h3>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
+            <Link to="/">Jitsi</Link>
+            <Link to="/chat">Chat</Link>
             <Link to="/meet">Meet</Link>
           </div>
         </nav>
@@ -28,8 +29,8 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/about">
-          <Root />
+          <Route path="/chat">
+          <Chat />
           </Route>
           <Route path="/meet">
           <div id="meet2">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
+import io from 'socket.io-client';
+import { serverUrl } from './urls';
 const videoDiv = {
     display: 'flex',
     justifyContent: 'space-around'
@@ -21,7 +22,10 @@ const NativeMeet = (props) => {
         const localVideo = document.getElementById('local-video');
         console.log("Local video: "+localVideo);
         console.log("Streamed video is: "+streamedVideo);
-        const socket = window.io();
+        console.log("Server: "+serverUrl());
+        console.log("Publi URL: "+process.env.PUBLIC_URL);
+        console.log("Port: "+process.env.PORT);
+        const socket = io(serverUrl());
         navigator.getUserMedia(
             { video: true, audio: true },
             stream => {
@@ -40,7 +44,7 @@ const NativeMeet = (props) => {
     
     useEffect(() => {
         if(streamedVideo === 'bla') {
-            const socket = window.io();
+            const socket = io('http://localhost:3001');
             socket.on('listening', (msg) => {
                 console.log(msg);
                 if(msg.id) {
@@ -68,9 +72,7 @@ const NativeMeet = (props) => {
                         <div style={video}>
                             <h3>You</h3>
                             <video autoPlay muted className="streamed-video" id="streamed-video">{streamedVideo}</video>
-                        </div>
-                        
-            
+                        </div>         
                     </div>
                 </div>
             </div>

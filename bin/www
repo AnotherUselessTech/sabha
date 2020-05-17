@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var {app, dbClient, createRoom, addChatToRoom, getAllChatsInRoom } = require('../app');
 // var debug = require('debug')('sabha-server:server');
 var http = require('http');
 
@@ -12,7 +12,7 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 /**
@@ -24,6 +24,9 @@ var io = require('socket.io')(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+var allChats = {};
+
 io.on('connection', (socket) => {
   socket.on('inputting', (msg) => {
     console.log("Message: "+msg);
@@ -32,6 +35,55 @@ io.on('connection', (socket) => {
     let id = '';
     console.log("Message: "+msg.audio);
     io.emit('listening', {id: msg.id, audio: msg.audio, video: msg.video});
+  });
+  socket.on('joined', msg => {
+    dbClient.connect(err => {
+      console.log(err);
+      dbClient.db('sabha').listCollections().toArray((err,collections) => {
+        if(collections.filter(collection => collection.name === msg.roomName).length === 0) {
+          createRoom(msg.roomName);
+        }
+      })
+    })    
+  });
+  socket.on('captureChat', msg => {
+    console.log("Chat Message: "+msg.username+msg.message.time+msg.message.text);
+    dbClient.connect(err => {
+      console.log(err);
+      dbClient.db('sabha').listCollections().toArray((err,collections) => {
+        err && console.error("No such collection available - "+msg.roomName);
+        if(collections.filter(collection => collection.name === msg.roomName).length === 0) {
+          throw 'What the hell are you doing?'
+        }
+        addChatToRoom(msg);
+        getAllChatsInRoom(msg.roomName, (allMessages) => {
+          console.log("Oh! So many!");
+          io.emit('otherschatreplies', {chatsData: allMessages});
+        });
+      })
+    }) 
+    
+  });
+  socket.on('initialize', msg => {
+    console.log("Initialized successfully");
+    getAllChatsInRoom(msg.roomName, (allMessages) => {
+      console.log("Oh! So many!");
+      // io.emit('otherschatrepliess', {chatsData: allMessages});
+    });
+    // dbClient.connect(err => {
+    //   console.log(err);
+    //   dbClient.db('sabha').listCollections().toArray((err,collections) => {
+    //     if(collections.filter(collection => collection.name === msg.roomName).length === 0) {
+    //       createRoom(msg.roomName);
+    //     }
+    //     else {
+    //       getAllChatsInRoom(msg.roomName, (allMessages) => {
+    //         console.log("Oh! So many!");
+    //         io.emit('otherschatreplies', {chatsData: allMessages});
+    //       });
+    //     }
+    //   })
+    // })
   });
 });
 server.listen(port, () => {
