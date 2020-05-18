@@ -171,7 +171,6 @@ const Chat = () => {
 
     const chatView = () => {
         console.log("Rerendering chat view...");
-        console.log(process.env.mongopwd ? process.env.mongopwd : 'whynopwd?');
         // const allChats = { ...otherChat, ...myChat };
         // console.log({ ...otherChat, ...myChat });
         console.log(allChat);
