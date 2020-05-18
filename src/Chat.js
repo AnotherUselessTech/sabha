@@ -109,7 +109,8 @@ const Chat = () => {
     useEffect(() => {
         if(chatStarted) {
             console.log("In effect, without socket!")
-            const socket = io(window.location.origin, {transports: ['websocket']});
+            // const socket = io(window.location.origin, {transports: ['websocket']});
+            const socket = io();
             socket.emit('initialize', {roomName});
             socket.on('otherschatreplies', (chats) => {
             let myChatSet = {};
@@ -157,7 +158,8 @@ const Chat = () => {
                 <div style={buttonDiv}>
                     <button style={buttonStyle} onClick={() => {
                         setrChatStarted(true);
-                        const socket = io(window.location.origin, {transports: ['websocket']});
+                        // const socket = io(window.location.origin, {transports: ['websocket']});
+                        const socket = io();
                         socket.emit('joined', { roomName: roomName, username: userName });
                     }}>Join Chat Room</button>
                 </div>
@@ -240,7 +242,8 @@ const Chat = () => {
 
                     <form className="msger-inputarea" onSubmit={(e) => {
                         e.preventDefault();
-                        const socket = io(window.location.origin, {transports: ['websocket']});
+                        // const socket = io(window.location.origin, {transports: ['websocket']});
+                        const socket = io();
                         socket.emit('captureChat', {
                             username: userName,
                             roomName: roomName,
