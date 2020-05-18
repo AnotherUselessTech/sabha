@@ -108,7 +108,8 @@ const Chat = () => {
 
     useEffect(() => {
         if(chatStarted) {
-            const socket = io();
+            console.log("In effect, without socket!")
+            const socket = io(window.location.origin, {transports: ['websocket']});
             socket.emit('initialize', {roomName});
             socket.on('otherschatreplies', (chats) => {
             let myChatSet = {};
@@ -156,7 +157,7 @@ const Chat = () => {
                 <div style={buttonDiv}>
                     <button style={buttonStyle} onClick={() => {
                         setrChatStarted(true);
-                        const socket = io();
+                        const socket = io(window.location.origin, {transports: ['websocket']});
                         socket.emit('joined', { roomName: roomName, username: userName });
                     }}>Join Chat Room</button>
                 </div>
@@ -239,7 +240,7 @@ const Chat = () => {
 
                     <form className="msger-inputarea" onSubmit={(e) => {
                         e.preventDefault();
-                        const socket = io();
+                        const socket = io(window.location.origin, {transports: ['websocket']});
                         socket.emit('captureChat', {
                             username: userName,
                             roomName: roomName,
@@ -248,6 +249,8 @@ const Chat = () => {
                                 text: chatInput
                             }
                         });
+                        allChat.chatsData.push({user: userName, message: chatInput, time: (new Date()).getTime()});
+                        setAllChat(allChat);
                         setChatInput('');
                     }}>
                         <input type="text" value={chatInput} onChange={(e) => { setChatInput(e.target.value) }} className="msger-input" placeholder="Enter your message..." />

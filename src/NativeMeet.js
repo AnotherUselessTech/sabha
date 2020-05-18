@@ -25,7 +25,7 @@ const NativeMeet = (props) => {
         console.log("Server: "+serverUrl());
         console.log("Publi URL: "+process.env.PUBLIC_URL);
         console.log("Port: "+process.env.PORT);
-        const socket = io(serverUrl());
+        const socket = io();
         navigator.getUserMedia(
             { video: true, audio: true },
             stream => {
@@ -44,7 +44,7 @@ const NativeMeet = (props) => {
     
     useEffect(() => {
         if(streamedVideo === 'bla') {
-            const socket = io('http://localhost:3001');
+            const socket = io();
             socket.on('listening', (msg) => {
                 console.log(msg);
                 if(msg.id) {

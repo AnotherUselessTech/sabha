@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
     console.log("Initialized successfully");
     getAllChatsInRoom(msg.roomName, (allMessages) => {
       console.log("Oh! So many!");
-      // io.emit('otherschatrepliess', {chatsData: allMessages});
+      io.emit('otherschatreplies', {chatsData: allMessages});
     });
     // dbClient.connect(err => {
     //   console.log(err);
