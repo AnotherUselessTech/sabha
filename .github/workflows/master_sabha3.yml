@@ -34,5 +34,6 @@ jobs:
       with:
         app-name: 'sabha3'
         slot-name: 'production'
+        mongopwd: ${{ secrets.mongopwd }}
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_e64610456f264dcdb12606bb9536e8f9 }}
         package: .

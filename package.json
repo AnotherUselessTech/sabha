@@ -16,7 +16,7 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "mongopwd=$mongopwd node ./bin/www",
     "devServer": "react-scripts build && nodemon --exec npm start",
     "dev": "react-scripts start",
     "build": "react-scripts build",
