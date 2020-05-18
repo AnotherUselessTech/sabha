@@ -45,8 +45,9 @@ io.on('connection', (socket) => {
       console.log(err);
       dbClient.db('sabha').listCollections().toArray((err,collections) => {
         if(collections.filter(collection => collection.name === msg.roomName).length === 0) {
-          createRoom(msg.roomName);
-          dbClient.close();
+          dbClient.db("sabha").createCollection(msg.roomName);
+          // createRoom(msg.roomName);
+          // dbClient.close();
         }
       })
     })    
@@ -61,12 +62,22 @@ io.on('connection', (socket) => {
         if(collections.filter(collection => collection.name === msg.roomName).length === 0) {
           throw 'What the hell are you doing?'
         }
-        addChatToRoom(msg);
-        getAllChatsInRoom(msg.roomName, (allMessages) => {
-          console.log("Oh! So many!");
+        const compiledMessage = {
+          user: msg.username,
+          message: msg.message.text,
+          time: msg.message.time
+        }
+        dbClient.db("sabha").collection(msg.roomName).insertOne(compiledMessage);
+        allMessagesInPromise = dbClient.db("sabha").collection(msg.roomName).find().toArray().then(allMessages => {
           io.emit('otherschatreplies', {chatsData: allMessages});
+          dbClient.close();
         });
-        dbClient.close();
+        // addChatToRoom(msg);
+        // getAllChatsInRoom(msg.roomName, (allMessages) => {
+        //   console.log("Oh! So many!");
+        //   io.emit('otherschatreplies', {chatsData: allMessages});
+        // });
+        
       })
     }) 
     

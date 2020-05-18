@@ -12,6 +12,7 @@ const uri = `mongodb+srv://saitejavadlapatla:${dontlook}@sabha-0kofs.mongodb.net
 const createRoom = (roomName) => {
   const dbClient = new MongoClient(uri, { useNewUrlParser: true });
   dbClient.connect(err => {
+    console.log("Error creating room: ");
     console.log(err);
     dbClient.db("sabha").createCollection(roomName);
     dbClient.close();
@@ -21,6 +22,7 @@ const createRoom = (roomName) => {
 const addChatToRoom = (msg) => {
   const dbClient = new MongoClient(uri, { useNewUrlParser: true });
   dbClient.connect(err => {
+    console.log("Error adding chat to room: ");
     console.log(err);
     const compiledMessage = {
       user: msg.username,
@@ -37,11 +39,12 @@ const getAllChatsInRoom = (roomName, socketEmitter) => {
   let allMessagesInPromise;
   const dbClient = new MongoClient(uri, { useNewUrlParser: true });
   dbClient.connect(err => {
+    console.log("Error fetching all chats in room: ");
     console.log(err);
     allMessagesInPromise = dbClient.db("sabha").collection(roomName).find().toArray();
     allMessagesInPromise.then(allMessages => {
       socketEmitter(allMessages);
-      dbClient.close();
+      // dbClient.close();
     });
   });
 }
