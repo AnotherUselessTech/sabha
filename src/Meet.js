@@ -6,6 +6,7 @@ import { ChatBubble, PanTool, MicRounded,
     VideoCallRounded, MicOffRounded, VideocamOffRounded, 
     PeopleRounded, ScreenShareRounded, StopScreenShareRounded, CallEndRounded,
     ViewComfyRounded, PersonRounded, MoreVertRounded  } from '@material-ui/icons';
+import DevicesMenu from './DevicesMenu';
 
 const inputStyle = {
     width:'30%',
@@ -83,6 +84,7 @@ export default function Meet(props) {
     let [anchorMenu, setAnchorMenu] = useState(null);
     let [menuOpen, setMenuOpen] = useState(false);
     let [fullScreenMenu, setFullScreenMenu] = useState("Full Screen");
+    let [allDevices, setAllDevices] = useState({mics:[], cameras: [], speakers: []});
 
     const anchorRef = React.useRef(null);
     const prevOpen = React.useRef(menuOpen);
@@ -114,7 +116,16 @@ export default function Meet(props) {
               console.log(window.JitsiMeetExternalAPI);
               const jitsi = new JitsiMeetExternalAPI(domain, options);
               jitsi.addEventListener('screenSharingStatusChanged', (e) => {console.log(e);setScreenShareEnabled(!screenShareEnabled)});
-              jitsi.executeCommand('toggleFilmStrip')
+              jitsi.executeCommand('toggleFilmStrip');
+              jitsi.getAvailableDevices().then(res => {
+                  console.log("######################",res);
+                  const devices = {
+                      mics: res.audioInput,
+                      speakers: res.audioOutput,
+                      cameras: res.videoInput
+                  };
+                  setAllDevices(devices);
+                });
               setJitsitFrame(jitsi);
           }
         
@@ -154,10 +165,13 @@ export default function Meet(props) {
     
       const handleMenuClose = () => {
         // setAnchorMenu(null);
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+        const devicesMenu = document.getElementById("devicesMenu");
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&", devicesMenu);
+        if (anchorRef.current && (anchorRef.current.contains(event.target) || devicesMenu)) {
+            console.log("doin nuthin")
             return;
           }
-      
+          console.log("Closing the shit")
           setMenuOpen(false);
       };
 
@@ -220,6 +234,7 @@ export default function Meet(props) {
                                             <MenuList autoFocusItem={menuOpen} id="menu-list-grow">
                                                 <MenuItem onClick={handleFullScreen}>{fullScreenMenu}</MenuItem>
                                                 <MenuItem onClick={() => {jitsiFrame.executeCommand('muteEveryone');}}>Mute Everyone</MenuItem>
+                                                <MenuItem><DevicesMenu {...allDevices} jitsiApi = {jitsiFrame} /></MenuItem>
                                             </MenuList>
                                             </ClickAwayListener>
                                         </Paper>
