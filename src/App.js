@@ -38,8 +38,6 @@ function App() {
             <NativeMeet />
           </Route>
           <Route path="/">
-            <div id="meet">
-            </div>
             <Meet divId = 'meet'/> 
           </Route>
         </Switch>

@@ -120,26 +120,28 @@ const Chat = () => {
             // setMyChat(myChatSet);
             console.log("Trying not to look");
             console.log(chats.dontlook);
+            const sortedChats = collectAndSortMessages(chats.chatsData);
             setAllChat(chats);
 
         });
         }
     }, [chatStarted]);
 
-    const collectAndSortMessages = () => {
-        const allChats = { ...otherChat, ...myChat };
+    const collectAndSortMessages = (allChats) => {
+        // const allChats = { ...otherChat, ...myChat };
         let messages = [];
-        Object.keys(allChats).forEach(user => {
-            const msgsOfUser = allChats[user].messages.map(message => {
-                return {
-                    user,
-                    time: message.time,
-                    text: message.text
-                }
-            });
-            messages = messages.concat(msgsOfUser);
-            messages = messages.sort((a, b) => a.time - b.time);
-        });
+        messages = allChats.sort((a,b) => a.time - b.time);
+        // allChats.forEach(user => {
+        //     const msgsOfUser = allChats[user].messages.map(message => {
+        //         return {
+        //             user,
+        //             time: message.time,
+        //             text: message.text
+        //         }
+        //     });
+        //     messages = messages.concat(msgsOfUser);
+        //     messages = messages.sort((a, b) => a.time - b.time);
+        // });
 
         return messages;
     }
