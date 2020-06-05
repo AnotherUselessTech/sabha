@@ -29,8 +29,53 @@ var io = require('socket.io')(server);
  */
 
 var allChats = {};
+var activeSockets = [];
 
 io.on('connection', (socket) => {
+
+  const existingSocket = activeSockets.find(
+    existingSocket => existingSocket === socket.id
+  );
+
+  if (!existingSocket) {
+    activeSockets.push(socket.id);
+
+    socket.emit("update-user-list", {
+      users: activeSockets.filter(
+        existingSocket => existingSocket !== socket.id
+      )
+    });
+    socket.broadcast.emit("update-user-list", {
+      users: [socket.id]
+    });
+  }
+
+  socket.on("call-user", data => {
+    socket.to(data.to).emit("call-made", {
+      offer: data.offer,
+      socket: socket.id
+    });
+  });
+
+  socket.on("make-answer", data => {
+    socket.to(data.to).emit("answer-made", {
+      socket: socket.id,
+      answer: data.answer
+    });
+  });
+
+  socket.on("disconnect", () => {
+    activeSockets = activeSockets.filter(
+      existingSocket => existingSocket !== socket.id
+    );
+    socket.broadcast.emit("remove-user", {
+      socketId: socket.id
+    });
+  });
+
+
+  // OLD WORKING CODE 
+  
   socket.on('inputting', (msg) => {
     console.log("Message: "+msg);
   });
@@ -52,6 +97,7 @@ io.on('connection', (socket) => {
       })
     })    
   });
+  
   socket.on('captureChat', msg => {
     console.log("Chat Message: "+msg.username+msg.message.time+msg.message.text);
     const dbClient = new MongoClient(uri, { useNewUrlParser: true });
@@ -89,6 +135,7 @@ io.on('connection', (socket) => {
       io.emit('otherschatreplies', {chatsData: allMessages});
     });
   });
+  
 });
 server.listen(port, () => {
   console.log("yeah, i am listening!");

@@ -1,6 +1,13 @@
+/*eslint-disable*/
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { serverUrl } from './urls';
+const socket = io("http://localhost:3001");
+const { RTCPeerConnection, RTCSessionDescription } = window;
+import Button from '@material-ui/core/Button';
+
+const peerConnection = new RTCPeerConnection();
+
 const videoDiv = {
     display: 'flex',
     justifyContent: 'space-around'
@@ -17,6 +24,7 @@ const video = {
 const NativeMeet = (props) => {
 
     let [streamedVideo, setStreamedVideo] = useState('');
+    let [allUsers, setAllUsers] = useState([]);
 
     useEffect(() => {
         const localVideo = document.getElementById('local-video');
@@ -25,26 +33,78 @@ const NativeMeet = (props) => {
         console.log("Server: "+serverUrl());
         console.log("Publi URL: "+process.env.PUBLIC_URL);
         console.log("Port: "+process.env.PORT);
-        const socket = io();
+        
+        let isAlreadyCalling = false;
+        // NEW EXP CODE
+        socket.on("update-user-list", ({ users }) => {
+            updateUserList(users);
+        });
+        socket.on("remove-user", ({ socketId }) => {
+            const elToRemove = document.getElementById(socketId);
+            
+            if (elToRemove) {
+              elToRemove.remove();
+            }
+        });
+        socket.on("call-made", async data => {
+            await peerConnection.setRemoteDescription(
+              new RTCSessionDescription(data.offer)
+            );
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+            
+            socket.emit("make-answer", {
+              answer,
+              to: data.socket
+            });
+        });
+        socket.on("answer-made", async data => {
+            await peerConnection.setRemoteDescription(
+              new RTCSessionDescription(data.answer)
+            );
+            
+            if (!isAlreadyCalling) {
+              callUser(data.socket);
+              isAlreadyCalling = true;
+            }
+        });
+
+        //OLD CODE
         navigator.getUserMedia(
             { video: true, audio: true },
-            stream => {
-              if (localVideo) {
+            async stream => {
+              if (localVideo && !streamedVideo) {
                 localVideo.srcObject = stream;
                 console.log(stream);
-                socket.emit('streaming', {id: 'local-video', audio: stream.getTracks()[0].id, video: stream.getTracks()[1].id});
+                stream.getTracks().forEach(track => {peerConnection.addTrack(track, stream)})
+                // navigator.mediaDevices.getDisplayMedia().then((screenShare) => {
+                //     console.log(screenShare);
+                //     const allTracks = [];
+                //     peerConnection.addTrack(screenShare.getTracks()[0], screenShare);
+                //     // socket.emit('streaming', {id: 'local-video', audio: 'none', video: stream.getTracks()[0].id});
+                // }).catch(rej => {console.log(rej)});
+                // socket.emit('streaming', {id: 'local-video', audio: stream.getTracks()[0].id, video: stream.getTracks()[1].id});
                 !streamedVideo && setStreamedVideo('bla');
               }
             },
             error => {
               console.warn(error.message);
             }
-           );
-    }, [streamedVideo]);
+        );
+        peerConnection.ontrack = function(stream) {
+            const remoteVideo = document.getElementById("streamed-video");
+            if (remoteVideo) {
+                console.log(stream.streams[0]);
+                remoteVideo.srcObject = stream.streams[0];
+            
+            
+            }
+           };
+    }, []);
     
     useEffect(() => {
         if(streamedVideo === 'bla') {
-            const socket = io();
+            // const socket = io("http://localhost:3001");
             socket.on('listening', (msg) => {
                 console.log(msg);
                 if(msg.id) {
@@ -57,8 +117,26 @@ const NativeMeet = (props) => {
                     setStreamedVideo('ad');
                 }
             });
+
+            
         }
-    });
+    },[]);
+    
+    const updateUserList = (users) => {
+        console.log("Users are: ", users);
+        setAllUsers(allUsers.concat(users));
+    }
+
+    async function callUser(socketId) {
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
+        
+        socket.emit("call-user", {
+          offer,
+          to: socketId
+        });
+    }
+    
 
     return (
         <div style={{ height: '35em' }}>
@@ -75,6 +153,11 @@ const NativeMeet = (props) => {
                         </div>         
                     </div>
                 </div>
+            </div>
+            <div>
+                <ul>
+    {allUsers.map(user => <li onClick={() => {callUser(user)}} key={user}><Button color="primary">Call - {user}</Button></li>)}
+                </ul>
             </div>
         </div>
     );

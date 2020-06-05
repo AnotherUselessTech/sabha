@@ -54,9 +54,9 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-io.on('connection', (socket) => {
-  console.log('bhambhola jambha');
-});
+// io.on('connection', (socket) => {
+//   console.log('bhambhola jambha');
+// });
 module.exports = {
   app, createRoom, addChatToRoom, getAllChatsInRoom
 }
