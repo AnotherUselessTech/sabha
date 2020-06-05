@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { serverUrl } from './urls';
-const socket = io("http://localhost:3001");
+const socket = io();
 const { RTCPeerConnection, RTCSessionDescription } = window;
 import Button from '@material-ui/core/Button';
 
