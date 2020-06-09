@@ -3,6 +3,7 @@ import React from 'react';
 import Meet from './Meet';
 import Chat from './Chat';
 import NativeMeet from './NativeMeet';
+import TextNSpeech from './TextNSpeech';
 
 import {
   BrowserRouter as Router,
@@ -23,6 +24,7 @@ function App() {
             <Link to="/">Jitsi</Link>
             <Link to="/chat">Chat</Link>
             <Link to="/meet">Meet</Link>
+            <Link to="/textnspeech">Text and Speech</Link>
           </div>
         </nav>
 
@@ -36,6 +38,9 @@ function App() {
           <div id="meet2">
             </div> 
             <NativeMeet />
+          </Route>
+          <Route path="/textnspeech">
+            <TextNSpeech />
           </Route>
           <Route path="/">
             <Meet divId = 'meet'/> 
