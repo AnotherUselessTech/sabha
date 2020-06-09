@@ -9,4 +9,4 @@ steps:
   entrypoint: npm
   args: ['run', 'build']
   env:
-    - 'mongopwd:$MONGOPWD'
+    - 'mongopwd:$_MONGOPWD'
